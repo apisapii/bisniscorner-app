@@ -5,9 +5,15 @@
             <a href="{{ route('catalog') }}" class="font-bold text-lg flex items-center">
                 🚀 Bazar PCR
             </a>
-            <a href="{{ route('catalog') }}" class="text-sm font-medium text-blue-100 hover:text-white transition hidden sm:block">
-                Home
-            </a>
+            
+            <div class="hidden sm:flex items-center gap-3 ml-2">
+                <a href="{{ route('catalog') }}" class="text-sm font-medium text-blue-100 hover:text-white transition">
+                    Home
+                </a>
+                <a href="{{ route('catalog') }}" class="text-sm font-medium text-blue-100 hover:text-white transition">
+                    Product
+                </a>
+            </div>
         </div>
 
         <div class="flex items-center gap-3">
@@ -25,12 +31,11 @@
                          class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 border border-gray-100 text-gray-800 z-50">
                         
                         <div class="px-4 py-2 border-b border-gray-100 mb-1">
-                            <p class="text-xs text-gray-500">Masuk sebagai:</p>
-                            <p class="text-sm font-bold truncate text-blue-600">{{ Auth::user()->name }}</p>
+                            <p class="text-sm font-bold truncate text-gray-800">{{ Auth::user()->name }}</p>
                         </div>
 
-                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm font-medium hover:bg-blue-50 hover:text-blue-600 transition">
-                            ⚙️ Pengaturan Profil
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm font-medium hover:bg-gray-100 hover:text-blue-600 transition">
+                            👤 Profile
                         </a>
                         
                         <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-gray-100">
@@ -43,7 +48,7 @@
                 </div>
             @else
                 <a href="{{ route('login') }}" class="text-sm bg-white text-blue-600 hover:bg-blue-50 shadow-sm px-4 py-1.5 rounded-full font-bold transition">
-                    Login Tenant
+                    Login
                 </a>
             @endauth
         </div>
