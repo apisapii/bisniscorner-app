@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',      // Tambahkan ini
+        'umkm_id',   // Tambahkan ini
     ];
 
     /**
@@ -44,5 +46,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function umkm()
+    {
+        return $this->belongsTo(Umkm::class);
     }
 }

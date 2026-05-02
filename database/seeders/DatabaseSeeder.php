@@ -1,25 +1,35 @@
 <?php
-
 namespace Database\Seeders;
-
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Umkm;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Buat Akun Super Admin (Bisa kamu pakai nanti)
+        User::create([
+            'name' => 'Super Admin Hafiz',
+            'email' => 'admin@bazaar.com',
+            'password' => Hash::make('password'),
+            'role' => 'super_admin',
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // 2. Buat 1 Toko UMKM Dummy
+        $toko = Umkm::create([
+            'name' => 'BoMaK! Snack',
+            'description' => 'Camilan enak khas bazar kampus',
+        ]);
+
+        // 3. Buat Akun Admin khusus untuk Toko BoMaK!
+        User::create([
+            'name' => 'Admin BoMaK',
+            'email' => 'bomak@bazaar.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin_umkm',
+            'umkm_id' => $toko->id,
         ]);
     }
 }
