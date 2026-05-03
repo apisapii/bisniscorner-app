@@ -1,80 +1,86 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            🏢 Kelola Tenant UMKM
-        </h2>
+        <div>
+            <h2 class="font-black text-xl text-gray-900">🏢 Kelola tenant UMKM</h2>
+            <p class="text-sm text-gray-500 mt-1">Buat akun penjual — slug toko otomatis untuk halaman publik.</p>
+        </div>
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-md mx-auto sm:max-w-4xl sm:px-6 lg:px-8">
-            
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-6">
+
             @if(session('success'))
-                <div class="mb-4 mx-4 sm:mx-0 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl text-sm font-bold flex items-center gap-2">
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-900 flex items-center gap-2">
                     <span>🎉</span> {{ session('success') }}
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-5 mb-6 mx-4 sm:mx-0">
-                <h3 class="font-bold text-gray-800 mb-3 text-base">➕ Daftarkan Tenant Baru</h3>
-                
-                <form action="{{ route('admin.tenants.store') }}" method="POST" class="space-y-3">
-                    @csrf
-                    <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Nama UMKM / Stand</label>
-                        <input type="text" name="name" required placeholder="Contoh: BoMaK!" 
-                               class="w-full mt-1 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl text-sm p-2.5">
-                    </div>
-                    
-                    <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Email Akun</label>
-                        <input type="email" name="email" required placeholder="Contoh: bomak@bazaar.com" 
-                               class="w-full mt-1 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl text-sm p-2.5">
-                    </div>
-                    
-                    <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Password</label>
-                        <input type="password" name="password" required placeholder="Minimal 6 karakter" 
-                               class="w-full mt-1 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl text-sm p-2.5">
-                    </div>
+            <div class="overflow-hidden rounded-3xl border border-gray-100 bg-gradient-to-br from-white to-blue-50/50 p-6 shadow-sm">
+                <h3 class="font-black text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white text-sm">+</span>
+                    Tenant baru
+                </h3>
 
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition duration-200">
-                        Simpan Akun Tenant
-                    </button>
+                <form action="{{ route('admin.tenants.store') }}" method="POST" class="grid gap-4 sm:grid-cols-2">
+                    @csrf
+                    <div class="sm:col-span-2">
+                        <label class="text-xs font-bold uppercase tracking-wide text-gray-500">Nama UMKM / stand</label>
+                        <input type="text" name="name" required placeholder="Contoh: BoMaK!"
+                               class="mt-1 w-full rounded-xl border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-wide text-gray-500">Email akun</label>
+                        <input type="email" name="email" required
+                               class="mt-1 w-full rounded-xl border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-wide text-gray-500">Password</label>
+                        <input type="password" name="password" required minlength="6"
+                               class="mt-1 w-full rounded-xl border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 font-bold text-white shadow-lg hover:shadow-xl transition">
+                            Simpan akun tenant
+                        </button>
+                    </div>
                 </form>
             </div>
 
-            <div class="px-4 sm:px-0 mb-3 flex justify-between items-center">
-                <h3 class="font-bold text-gray-700">List Tenant Aktif</h3>
-                <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">
-                    {{ $tenants->count() }} Tenant
-                </span>
+            <div class="flex items-center justify-between px-1">
+                <h3 class="font-bold text-gray-800">Tenant aktif</h3>
+                <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-black text-blue-800">{{ $tenants->count() }}</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 px-4 sm:px-0">
+            <div class="grid gap-4 sm:grid-cols-2">
                 @forelse($tenants as $tenant)
-                    <div class="bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-4 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <h4 class="font-bold text-gray-800 text-base leading-tight">{{ $tenant->name }}</h4>
-                                <span class="bg-blue-50 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
-                                    Seller
-                                </span>
+                    <div class="group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-lg hover:border-blue-200">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <h4 class="font-black text-gray-900">{{ $tenant->name }}</h4>
+                                <p class="text-xs text-gray-500 break-all mt-1">{{ $tenant->email }}</p>
+                                @if($tenant->umkm)
+                                    <a href="{{ route('catalog.umkm', $tenant->umkm) }}" target="_blank"
+                                       class="mt-3 inline-flex items-center gap-1 rounded-lg bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700 hover:bg-blue-100 transition">
+                                        Lihat toko ↗
+                                    </a>
+                                    <p class="text-[10px] text-gray-400 font-mono mt-1">/toko/{{ $tenant->umkm->slug }}</p>
+                                @endif
                             </div>
-                            <p class="text-xs text-gray-500 break-all mb-4">{{ $tenant->email }}</p>
+                            <span class="shrink-0 rounded-lg bg-indigo-50 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-indigo-700">UMKM</span>
                         </div>
-                        
-                        <form action="{{ route('admin.tenants.destroy', $tenant->id) }}" method="POST" onsubmit="return confirm('Apakah kamu yakin ingin menghapus tenant ini? Semua produknya juga akan hilang!')">
+                        <form action="{{ route('admin.tenants.destroy', $tenant->id) }}" method="POST" class="mt-4"
+                              onsubmit="return confirm('Hapus tenant ini beserta UMKM & produk terkait?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-bold py-2 rounded-xl text-xs transition duration-200">
-                                🗑️ Hapus Tenant
+                            <button type="submit" class="w-full rounded-xl bg-red-50 py-2 text-xs font-bold text-red-600 hover:bg-red-100 transition">
+                                Hapus tenant
                             </button>
                         </form>
                     </div>
                 @empty
-                    <div class="col-span-full text-center py-10 bg-white rounded-2xl shadow-sm border border-gray-100">
-                        <span class="text-4xl block mb-2">🏪</span>
-                        <p class="text-gray-500 font-medium text-sm">Belum ada tenant yang didaftarkan.</p>
+                    <div class="col-span-full rounded-3xl border-2 border-dashed border-gray-200 py-14 text-center">
+                        <span class="text-4xl">🏪</span>
+                        <p class="mt-2 text-sm text-gray-500">Belum ada tenant.</p>
                     </div>
                 @endforelse
             </div>

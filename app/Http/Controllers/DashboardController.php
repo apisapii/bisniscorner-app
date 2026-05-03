@@ -12,7 +12,7 @@ class DashboardController extends Controller
     {
         // Ambil semua rincian pesanan yang masuk KHUSUS untuk UMKM yang sedang login
         $incomingOrders = OrderItem::with(['order', 'product'])
-                            ->where('umkm_id', Auth::id())
+                            ->where('umkm_id', Auth::user()->umkm_id)
                             ->orderBy('created_at', 'desc')
                             ->get();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,13 +12,18 @@ class ProductController extends Controller
     public function index()
     {
         // Hanya ambil produk milik UMKM si admin yang login
-        $products = Product::where('umkm_id', Auth::user()->umkm_id)->get();
+        $products = Product::with('category')
+            ->where('umkm_id', Auth::user()->umkm_id)
+            ->orderByDesc('id')
+            ->get();
         return view('products.index', compact('products'));
     }
 
     public function create()
     {
-        return view('products.create');
+        $categories = Category::query()->orderBy('sort_order')->orderBy('name')->get();
+
+        return view('products.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -25,6 +31,8 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'nullable|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'description' => 'nullable|string',
         ]);
@@ -36,7 +44,7 @@ class ProductController extends Controller
             ]);
         }
 
-        $data = $request->all();
+        $data = $request->only(['name', 'price', 'stock', 'description', 'category_id']);
         $data['umkm_id'] = $user->umkm_id;
 
         if ($request->hasFile('image')) {

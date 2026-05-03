@@ -14,19 +14,35 @@
     </div>
 
     <main class="max-w-md mx-auto p-4 mt-2 mb-24">
+        @if ($errors->any())
+            <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
         <div class="bg-white p-5 rounded-xl shadow-sm mb-6">
             <h2 class="font-bold text-gray-800 mb-4">Informasi Pengambilan</h2>
+
+            @auth
+                @if(Auth::user()->role === 'customer')
+                    <p class="text-xs text-gray-500 mb-3">Pesanan ini akan tercatat di <strong>Riwayat</strong> akunmu.</p>
+                @endif
+            @endauth
             
             <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
                 @csrf
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap</label>
-                    <input type="text" name="customer_name" required class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm p-2.5" placeholder="Contoh: Hafiz Ramadhan">
+                    <input type="text" name="customer_name" required
+                           value="{{ old('customer_name', Auth::user()?->name ?? '') }}"
+                           class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm p-2.5" placeholder="Contoh: Hafiz Ramadhan">
                 </div>
                 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Email (Untuk Struk)</label>
-                    <input type="email" name="customer_email" required class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm p-2.5" placeholder="Contoh: hafiz@email.com">
+                    <input type="email" name="customer_email" required
+                           value="{{ old('customer_email', Auth::user()?->email ?? '') }}"
+                           class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm p-2.5" placeholder="Contoh: hafiz@email.com">
                 </div>
             </form>
         </div>

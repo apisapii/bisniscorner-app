@@ -9,7 +9,12 @@ class OrderItem extends Model
 {
     use HasFactory;
 
-    // Tambahkan baris ini 👇
+    public const DELIVERY_PENDING = 'pending';
+
+    public const DELIVERY_READY = 'ready';
+
+    public const DELIVERY_PICKED_UP = 'picked_up';
+
     protected $fillable = [
         'order_id', 
         'product_id', 
@@ -27,5 +32,15 @@ class OrderItem extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function deliveryLabel(): string
+    {
+        return match ($this->delivery_status) {
+            self::DELIVERY_READY => 'Siap diambil',
+            self::DELIVERY_PICKED_UP => 'Sudah diambil',
+            self::DELIVERY_PENDING => 'Disiapkan penjual',
+            default => $this->delivery_status,
+        };
     }
 }

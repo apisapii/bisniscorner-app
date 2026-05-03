@@ -1,13 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            ➕ Tambah Produk Baru
-        </h2>
+        <div>
+            <h2 class="font-black text-xl text-gray-900">➕ Produk baru</h2>
+            <p class="text-sm text-gray-500 mt-1">Pilih kategori agar pembeli bisa filter di katalog.</p>
+        </div>
     </x-slot>
 
     <div class="py-6">
         <div class="max-w-md mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-gray-100 p-6">
                 
                 <a href="{{ route('products.index') }}" class="text-sm text-gray-500 mb-4 inline-block">
                     ← Kembali ke Daftar Produk
@@ -33,6 +34,19 @@
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Contoh: Basreng Pedas Daun Jeruk"
                             value="{{ old('name') }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Kategori</label>
+                        <select name="category_id" class="mt-1 block w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">— Pilih (disarankan) —</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}" @selected(old('category_id') == $cat->id)>
+                                    {{ $cat->icon }} {{ $cat->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Master kategori diatur super admin.</p>
                     </div>
 
                     <div class="mb-4">

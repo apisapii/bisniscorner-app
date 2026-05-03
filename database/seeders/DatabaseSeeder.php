@@ -9,6 +9,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(CategorySeeder::class);
+
         // 1. Buat Akun Super Admin (Bisa kamu pakai nanti)
         User::create([
             'name' => 'Super Admin Hafiz',
