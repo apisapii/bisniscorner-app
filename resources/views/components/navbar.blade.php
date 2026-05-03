@@ -1,20 +1,19 @@
 <nav x-data="{ open: false }" class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
     <div class="max-w-md mx-auto flex justify-between items-center">
         
-        <div class="flex items-center gap-4">
-            <a href="{{ route('catalog') }}" class="font-bold text-lg flex items-center">
-                🚀 Bazar PCR
-            </a>
-            
-            <div class="hidden sm:flex items-center gap-3 ml-2">
-                <a href="{{ route('catalog') }}" class="text-sm font-medium text-blue-100 hover:text-white transition">
-                    Home
-                </a>
-                <a href="{{ route('catalog') }}" class="text-sm font-medium text-blue-100 hover:text-white transition">
-                    Product
-                </a>
-            </div>
-        </div>
+    <div class="flex items-center gap-2 sm:gap-4">
+    <a href="{{ route('catalog') }}" class="font-bold text-base sm:text-lg flex items-center whitespace-nowrap">
+        🚀 Bazar PCR
+    </a>
+    
+    <div class="flex items-center gap-2 sm:gap-3 ml-1 sm:ml-2"> <a href="{{ route('catalog') }}" class="text-xs sm:text-sm font-medium text-blue-100 hover:text-white transition">
+            Home
+        </a>
+        <a href="{{ route('catalog') }}" class="text-xs sm:text-sm font-medium text-blue-100 hover:text-white transition">
+            Product
+        </a>
+    </div>
+</div>
 
         <div class="flex items-center gap-3">
             @auth

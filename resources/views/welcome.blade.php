@@ -10,8 +10,6 @@
     <x-navbar />
 
     <div class="bg-blue-600 text-white rounded-b-3xl shadow-md mb-4 max-w-md mx-auto overflow-hidden">
-        
-        
         <div class="pb-6 pt-4 px-4 text-center">
             <h2 class="text-xl font-extrabold mb-1">Business Corner 2026</h2>
             <p class="text-blue-100 text-sm mb-4 leading-tight">
@@ -45,24 +43,39 @@
         <div class="grid grid-cols-2 gap-4">
             @forelse($products as $product)
             <div class="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col">
-                <div class="h-32 bg-gray-200 flex items-center justify-center text-gray-400 text-sm">
-                    Foto Produk
+                <!-- FOTO/IMAGE PRODUCT - REPLACED HERE -->
+                <div class="h-40 bg-gray-100 overflow-hidden relative">
+                    @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs italic">
+                            No Image
+                        </div>
+                    @endif
+                    <div class="absolute top-2 left-2">
+                        <span class="bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[9px] font-black text-blue-600 shadow-sm uppercase">
+                            {{ $product->umkm->name }}
+                        </span>
+                    </div>
                 </div>
                 
                 <div class="p-3 flex-grow flex flex-col justify-between">
                     <div>
-                        <span class="text-xs font-semibold text-blue-500 mb-1 block">{{ $product->umkm->name }}</span>
-                        <h3 class="font-bold text-gray-800 text-sm leading-tight mb-2">{{ $product->name }}</h3>
+                        <h4 class="font-bold text-gray-800 text-sm leading-tight mb-1">
+                            {{ $product->name }}
+                        </h4>
+                        <p class="text-[11px] text-gray-500 line-clamp-2 mb-3 h-8">
+                            {{ $product->description }}
+                        </p>
                     </div>
-                    
                     <div>
                         <p class="font-bold text-orange-500 mb-2">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                         <form action="{{ route('cart.add', $product->id) }}" method="POST">
-    @csrf
-    <button type="submit" class="w-full bg-blue-100 text-blue-600 font-semibold py-1.5 rounded-lg text-sm hover:bg-blue-600 hover:text-white transition">
-        + Keranjang
-    </button>
-</form>
+                            @csrf
+                            <button type="submit" class="w-full bg-blue-100 text-blue-600 font-semibold py-1.5 rounded-lg text-sm hover:bg-blue-600 hover:text-white transition">
+                                + Keranjang
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

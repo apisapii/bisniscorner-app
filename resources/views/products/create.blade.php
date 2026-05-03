@@ -13,28 +13,52 @@
                     ← Kembali ke Daftar Produk
                 </a>
 
-                <form action="{{ route('products.store') }}" method="POST">
+                @if ($errors->any())
+                    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-5 rounded-r-xl shadow-sm">
+                        <p class="text-xs font-black uppercase tracking-wider mb-1">Cek lagi data kamu:</p>
+                        <ul class="list-disc pl-5 text-sm font-semibold">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Nama Produk</label>
                         <input type="text" name="name" required 
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Contoh: Basreng Pedas Daun Jeruk">
+                            placeholder="Contoh: Basreng Pedas Daun Jeruk"
+                            value="{{ old('name') }}">
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Harga (Rp)</label>
                         <input type="number" name="price" required 
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="10000">
+                            placeholder="10000"
+                            value="{{ old('price') }}">
                     </div>
 
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700">Stok Awal</label>
                         <input type="number" name="stock" required 
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="50">
+                            placeholder="50"
+                            value="{{ old('stock') }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700">Deskripsi Produk</label>
+                        <textarea name="description" class="w-full rounded-xl border-gray-200 mt-1" placeholder="Cth: Pedas gurih daun jeruk...">{{ old('description') }}</textarea>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-gray-700">Foto Produk</label>
+                        <input type="file" name="image" class="w-full mt-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     </div>
 
                     <button type="submit" 

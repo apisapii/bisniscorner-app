@@ -25,16 +25,27 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'stock' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'description' => 'nullable|string',
         ]);
 
-        Product::create([
-            'umkm_id' => Auth::user()->umkm_id,
-            'name' => $request->name,
-            'price' => $request->price,
-            'stock' => $request->stock,
-        ]);
+        $user = Auth::user();
+        if ($user->umkm_id === null) {
+            return redirect()->back()->withInput()->withErrors([
+                'umkm' => 'Akun ini belum terhubung ke profil UMKM.',
+            ]);
+        }
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambah!');
+        $data = $request->all();
+        $data['umkm_id'] = $user->umkm_id;
+
+        if ($request->hasFile('image')) {
+            // Simpan foto ke folder storage/app/public/products
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create($data);
+
+        return redirect()->route('dashboard');
     }
 }
