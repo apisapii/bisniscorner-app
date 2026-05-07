@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/history', [OrderHistoryController::class, 'index'])->name('customer.history');
     Route::get('/history/{order}/struk', [OrderHistoryController::class, 'receipt'])->name('customer.orders.receipt');
@@ -35,6 +36,9 @@ Route::middleware(['auth', 'role:admin_umkm'])->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 });
 
 Route::middleware(['auth', 'role:super_admin'])->group(function () {
@@ -52,6 +56,8 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/{id}/increase', [CartController::class, 'increase'])->name('cart.increase');
+Route::post('/cart/{id}/decrease', [CartController::class, 'decrease'])->name('cart.decrease');
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');

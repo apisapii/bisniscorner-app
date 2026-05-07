@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -20,12 +22,14 @@ class CheckoutController extends Controller
             return redirect()->route('catalog');
         }
 
-        $total = 0;
+        $subtotal = 0;
         foreach($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
+            $subtotal += $item['price'] * $item['quantity'];
         }
+        $serviceFee = Order::SERVICE_FEE_FLAT;
+        $total = $subtotal + $serviceFee;
 
-        return view('checkout', compact('cart', 'total'));
+        return view('checkout', compact('cart', 'subtotal', 'serviceFee', 'total'));
     }
         public function process(Request $request)
         {
@@ -41,10 +45,12 @@ class CheckoutController extends Controller
         }
 
         // Hitung total lagi buat jaga-jaga
-        $totalAmount = 0;
+        $subtotalAmount = 0;
         foreach($cart as $item) {
-            $totalAmount += $item['price'] * $item['quantity'];
+            $subtotalAmount += $item['price'] * $item['quantity'];
         }
+        $serviceFeeAmount = Order::SERVICE_FEE_FLAT;
+        $totalAmount = $subtotalAmount + $serviceFeeAmount;
 
         $userId = Auth::check() && Auth::user()->role === 'customer'
             ? Auth::id()
@@ -57,6 +63,7 @@ class CheckoutController extends Controller
             'customer_name' => $request->customer_name,
             'customer_email' => $request->customer_email,
             'total_amount' => $totalAmount,
+            'service_fee_amount' => $serviceFeeAmount,
             'status' => 'pending',
             'payment_status' => Order::PAYMENT_PENDING,
         ]);
@@ -64,7 +71,7 @@ class CheckoutController extends Controller
         // 3. Simpan rincian ke tabel 'order_items'
         foreach($cart as $id => $details) {
             // Ambil umkm_id dari produk asli di database
-            $product = \App\Models\Product::find($id);
+            $product = Product::find($id);
             
             OrderItem::create([
                 'order_id' => $order->id,
@@ -123,11 +130,38 @@ class CheckoutController extends Controller
             }
         }
 
-        $order->update([
-            'payment_status' => Order::PAYMENT_PAID,
-            'payment_paid_at' => now(),
-            'status' => 'paid',
-        ]);
+        try {
+            DB::transaction(function () use ($order) {
+                $lockedOrder = Order::with('items')->lockForUpdate()->findOrFail($order->id);
+
+                if ($lockedOrder->payment_status !== Order::PAYMENT_PENDING) {
+                    return;
+                }
+
+                foreach ($lockedOrder->items as $item) {
+                    $product = Product::lockForUpdate()->find($item->product_id);
+                    if (! $product) {
+                        continue;
+                    }
+
+                    if ((int) $product->stock < (int) $item->quantity) {
+                        throw ValidationException::withMessages([
+                            'payment' => "Stok produk {$product->name} tidak mencukupi untuk pelunasan.",
+                        ]);
+                    }
+
+                    $product->decrement('stock', (int) $item->quantity);
+                }
+
+                $lockedOrder->update([
+                    'payment_status' => Order::PAYMENT_PAID,
+                    'payment_paid_at' => now(),
+                    'status' => 'paid',
+                ]);
+            });
+        } catch (ValidationException $e) {
+            throw $e;
+        }
 
         $flash = 'Pembayaran (dummy) berhasil. Nanti diganti callback Xendit.';
 

@@ -15,6 +15,27 @@
                 </div>
             @endif
 
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="rounded-2xl border border-blue-100 bg-blue-50 p-4">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-blue-700">Total GMV bazar</p>
+                    <p class="mt-1 text-xl font-black text-blue-900">Rp {{ number_format($totalGmv, 0, ',', '.') }}</p>
+                </div>
+                <div class="rounded-2xl border border-indigo-100 bg-indigo-50 p-4">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-indigo-700">Service fee terkumpul</p>
+                    <p class="mt-1 text-xl font-black text-indigo-900">Rp {{ number_format($totalServiceFee, 0, ',', '.') }}</p>
+                    <p class="text-[11px] text-indigo-700 mt-1">Rp 500 × {{ $totalPaidTransactions }} transaksi lunas</p>
+                </div>
+                <div class="rounded-2xl border border-purple-100 bg-purple-50 p-4">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-purple-700">Produk paling laku</p>
+                    @if($topSellingProducts->isNotEmpty() && $topSellingProducts->first()->product)
+                        <p class="mt-1 text-sm font-black text-purple-900 line-clamp-2">{{ $topSellingProducts->first()->product->name }}</p>
+                        <p class="text-xs font-semibold text-purple-700">{{ (int) $topSellingProducts->first()->sold_qty }} item</p>
+                    @else
+                        <p class="mt-1 text-sm font-semibold text-purple-700">Belum ada transaksi lunas</p>
+                    @endif
+                </div>
+            </div>
+
             <div class="overflow-hidden rounded-3xl border border-gray-100 bg-gradient-to-br from-white to-blue-50/50 p-6 shadow-sm">
                 <h3 class="font-black text-gray-900 mb-4 flex items-center gap-2">
                     <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white text-sm">+</span>

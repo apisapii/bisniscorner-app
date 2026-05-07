@@ -13,8 +13,9 @@
         }
     </style>
 </head>
-<body class="bg-gray-200 antialiased text-gray-900 min-h-screen">
-    <div class="no-print max-w-md mx-auto p-4 flex gap-2 sticky top-0 z-10 bg-gray-200/95 backdrop-blur-sm pb-2">
+<body class="min-h-screen flex flex-col bg-gray-200 antialiased text-gray-900">
+    <div class="flex-1 flex flex-col w-full min-h-0">
+    <div class="no-print shrink-0 max-w-md mx-auto p-4 flex gap-2 sticky top-0 z-10 bg-gray-200/95 backdrop-blur-sm pb-2 w-full">
         <a href="{{ route('customer.orders.show', $order) }}"
            class="flex-1 text-center text-sm font-bold bg-white border border-gray-200 text-gray-800 py-3 rounded-xl shadow-sm">
             ← Detail
@@ -78,7 +79,17 @@
                 @endforeach
             </ul>
         </div>
-        <div class="px-4 py-4 bg-gray-50 border-t-2 border-dashed border-gray-300 flex justify-between items-center">
+        <div class="px-4 py-3 bg-gray-50 border-t-2 border-dashed border-gray-300 text-sm space-y-1">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Subtotal produk</span>
+                <span class="font-semibold">Rp {{ number_format($order->subtotalAmount(), 0, ',', '.') }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-600">Biaya layanan</span>
+                <span class="font-semibold">Rp {{ number_format($order->service_fee_amount, 0, ',', '.') }}</span>
+            </div>
+        </div>
+        <div class="px-4 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
             <span class="font-bold">TOTAL</span>
             <span class="text-xl font-black @if($order->isPaid()) text-green-700 @else text-amber-700 @endif">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
         </div>
@@ -93,5 +104,8 @@
             window.print();
         });
     </script>
+    </div>
+
+    <x-site-footer />
 </body>
 </html>

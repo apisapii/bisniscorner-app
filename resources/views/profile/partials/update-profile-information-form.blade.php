@@ -47,6 +47,31 @@
             @endif
         </div>
 
+        @if($user->role === 'admin_umkm' && $user->umkm)
+            <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 space-y-4">
+                <p class="text-sm font-bold text-blue-900">Profil Toko UMKM (tampil di halaman toko)</p>
+                <div>
+                    <x-input-label for="umkm_description" value="Deskripsi toko" />
+                    <textarea id="umkm_description" name="umkm_description" rows="3"
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('umkm_description', $user->umkm->description) }}</textarea>
+                    <x-input-error class="mt-2" :messages="$errors->get('umkm_description')" />
+                </div>
+                <div>
+                    <x-input-label for="umkm_contact_name" value="Nama kontak" />
+                    <x-text-input id="umkm_contact_name" name="umkm_contact_name" type="text" class="mt-1 block w-full"
+                                  :value="old('umkm_contact_name', $user->umkm->contact_name)" />
+                    <x-input-error class="mt-2" :messages="$errors->get('umkm_contact_name')" />
+                </div>
+                <div>
+                    <x-input-label for="umkm_contact_phone" value="No. WhatsApp / Telepon" />
+                    <x-text-input id="umkm_contact_phone" name="umkm_contact_phone" type="text" class="mt-1 block w-full"
+                                  :value="old('umkm_contact_phone', $user->umkm->contact_phone)" />
+                    <p class="mt-1 text-xs text-gray-500">Format bebas (contoh: 0812..., +62812..., atau 62...). Nanti otomatis dibuat link WhatsApp.</p>
+                    <x-input-error class="mt-2" :messages="$errors->get('umkm_contact_phone')" />
+                </div>
+            </div>
+        @endif
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

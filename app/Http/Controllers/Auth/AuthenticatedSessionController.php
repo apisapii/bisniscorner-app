@@ -15,9 +15,18 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function createCustomer(): View
     {
-        return view('auth.login');
+        return view('auth.login', [
+            'portal' => 'customer',
+        ]);
+    }
+
+    public function createAdmin(): View
+    {
+        return view('auth.login', [
+            'portal' => 'admin',
+        ]);
     }
 
     /**

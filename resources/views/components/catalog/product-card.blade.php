@@ -28,12 +28,20 @@
                 {{ $product->description ?: '—' }}
             </p>
         </div>
-        <div>
+        <div x-data="{ qty: 1 }">
             <p class="font-bold text-orange-500 mb-2 text-sm">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
             <form action="{{ route('cart.add', $product->id) }}" method="POST">
                 @csrf
+                <div class="mb-2 flex items-center justify-between gap-2 rounded-xl bg-slate-50 border border-slate-200 px-2 py-1.5">
+                    <span class="text-[11px] font-semibold text-slate-600">Jumlah</span>
+                    <div class="flex items-center gap-1">
+                        <button type="button" @click="qty = Math.max(1, qty - 1)" class="h-7 w-7 rounded-lg bg-white border border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-100">-</button>
+                        <input type="number" name="quantity" x-model.number="qty" min="1" max="999" class="w-12 h-7 rounded-lg border-slate-200 text-center text-xs font-bold p-1">
+                        <button type="button" @click="qty = Math.min(999, qty + 1)" class="h-7 w-7 rounded-lg bg-white border border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-100">+</button>
+                    </div>
+                </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-2 rounded-xl text-sm hover:from-blue-700 hover:to-indigo-700 shadow-md active:scale-[0.98] transition">
-                    + Keranjang
+                    + Tambah ke Keranjang
                 </button>
             </form>
         </div>

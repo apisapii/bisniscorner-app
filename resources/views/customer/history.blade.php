@@ -6,19 +6,21 @@
     <title>Riwayat pesanan — Bazar PCR</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 antialiased text-gray-900">
-    <x-navbar />
+<body class="min-h-screen flex flex-col bg-slate-50 antialiased text-gray-900">
+    <div class="shrink-0"><x-navbar /></div>
 
-    <main class="max-w-md mx-auto p-4 pb-24">
-        <h1 class="text-xl font-bold text-gray-800 mb-1">Riwayat pesanan</h1>
-        <p class="text-sm text-gray-500 mb-6">Status pembayaran (nanti Xendit) & kesiapan barang dari penjual.</p>
+    <main class="flex-1 max-w-md mx-auto w-full p-4 pb-8">
+        <div class="rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 mb-5 shadow-lg">
+            <h1 class="text-xl font-black mb-1">Riwayat pesanan</h1>
+            <p class="text-sm text-blue-100">Status pembayaran (nanti Xendit) dan kesiapan barang dari penjual.</p>
+        </div>
 
         @forelse($orders as $order)
             @php
                 $itemTotal = $order->items->count();
                 $readyCount = $order->items->filter(fn ($i) => in_array($i->delivery_status, [\App\Models\OrderItem::DELIVERY_READY, \App\Models\OrderItem::DELIVERY_PICKED_UP], true))->count();
             @endphp
-            <article class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-4">
+            <article class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-4 hover:shadow-md transition">
                 <div class="flex justify-between items-start gap-2 mb-2">
                     <div>
                         <p class="text-xs text-gray-500">No. pesanan</p>
@@ -69,5 +71,7 @@
             ← Kembali ke katalog
         </a>
     </main>
+
+    <x-site-footer />
 </body>
 </html>

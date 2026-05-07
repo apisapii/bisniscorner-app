@@ -6,10 +6,11 @@
     <title>Katalog — Bazar PCR</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-slate-50 antialiased text-gray-900 min-h-screen">
-    <x-navbar />
+<body class="min-h-screen flex flex-col bg-slate-50 antialiased text-gray-900">
+    <div class="shrink-0"><x-navbar /></div>
 
-    <header class="relative max-w-md mx-auto overflow-hidden rounded-b-[2rem] bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 text-white shadow-xl mb-6">
+    <div class="flex-1 flex flex-col w-full min-h-0">
+    <header class="relative max-w-md mx-auto w-full overflow-hidden rounded-b-[2rem] bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 text-white shadow-xl mb-6">
         <div class="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.08\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
         <div class="relative px-5 pt-8 pb-10 text-center">
             <p class="text-blue-200 text-xs font-semibold tracking-widest uppercase mb-1">Business Corner 2026</p>
@@ -20,7 +21,7 @@
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-4 pb-28" x-data="{ open: false }" id="filter-panel">
+    <main class="flex-1 max-w-md mx-auto w-full px-4 pb-28" x-data="{ open: false }" id="filter-panel">
         <form method="GET" action="{{ route('catalog') }}" class="space-y-4 mb-6">
             <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
@@ -127,6 +128,7 @@
             @endforelse
         </div>
     </main>
+    </div>
 
     @php
         $cartCount = 0;
@@ -148,5 +150,7 @@
             @endif
         </a>
     </div>
+
+    <x-site-footer class="pb-28" />
 </body>
 </html>

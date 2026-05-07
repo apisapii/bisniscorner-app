@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class Umkm extends Model
 {
-    protected $fillable = ['name', 'slug', 'description', 'bank_name', 'account_number'];
+    protected $fillable = ['name', 'slug', 'description', 'contact_name', 'contact_phone', 'bank_name', 'account_number'];
 
     protected static function booted(): void
     {

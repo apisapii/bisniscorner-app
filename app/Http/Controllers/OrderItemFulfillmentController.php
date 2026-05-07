@@ -13,8 +13,14 @@ class OrderItemFulfillmentController extends Controller
         $user = Auth::user();
         abort_unless($user->umkm_id && (int) $orderItem->umkm_id === (int) $user->umkm_id, 403);
 
+        $dashboardParams = collect(['tanggal_mulai', 'tanggal_selesai'])
+            ->mapWithKeys(fn ($key) => [$key => $request->query($key) ?? $request->input($key)])
+            ->filter()
+            ->all();
+
         if (! $orderItem->order->isPaid()) {
-            return redirect()->route('dashboard')->with('warning', 'Pesanan belum lunas. Tunggu pembayaran dari pelanggan.');
+            return redirect()->route('dashboard', $dashboardParams)
+                ->with('warning', 'Pesanan belum lunas. Tunggu pembayaran dari pelanggan.');
         }
 
         $request->validate([
@@ -25,6 +31,6 @@ class OrderItemFulfillmentController extends Controller
             'delivery_status' => $request->delivery_status,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Status barang diperbarui.');
+        return redirect()->route('dashboard', $dashboardParams)->with('success', 'Status barang diperbarui.');
     }
 }

@@ -6,10 +6,11 @@
     <title>{{ $umkm->name }} — Bazar PCR</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-slate-50 antialiased text-gray-900 min-h-screen">
-    <x-navbar />
+<body class="min-h-screen flex flex-col bg-slate-50 antialiased text-gray-900">
+    <div class="shrink-0"><x-navbar /></div>
 
-    <header class="max-w-md mx-auto relative overflow-hidden rounded-b-[2rem] bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 text-white shadow-xl mb-6">
+    <div class="flex-1 flex flex-col w-full min-h-0">
+    <header class="max-w-md mx-auto w-full relative overflow-hidden rounded-b-[2rem] bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 text-white shadow-xl mb-6">
         <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_20%,white,transparent_50%)]"></div>
         <div class="relative px-5 pt-8 pb-8">
             <a href="{{ route('catalog') }}#tenants" class="inline-flex items-center text-xs font-bold text-blue-200 hover:text-white mb-4 transition">
@@ -22,12 +23,41 @@
                 <div>
                     <h1 class="text-2xl font-black leading-tight">{{ $umkm->name }}</h1>
                     <p class="text-blue-200 text-sm mt-1 leading-snug">{{ $umkm->description ?: 'Produk dari tenant ini.' }}</p>
+                    @if($umkm->contact_name || $umkm->contact_phone)
+                        @php
+                            $rawPhone = (string) ($umkm->contact_phone ?? '');
+                            $normalizedDigits = preg_replace('/\D+/', '', $rawPhone) ?? '';
+                            if (str_starts_with($normalizedDigits, '0')) {
+                                $normalizedDigits = '62'.substr($normalizedDigits, 1);
+                            } elseif (str_starts_with($normalizedDigits, '8')) {
+                                $normalizedDigits = '62'.$normalizedDigits;
+                            }
+                            $waUrl = $normalizedDigits !== ''
+                                ? 'https://wa.me/'.$normalizedDigits.'?text='.urlencode('Halo '.$umkm->name.', saya mau tanya produk di toko ini.')
+                                : null;
+                        @endphp
+                        <div class="mt-3 inline-flex flex-col gap-1 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs text-blue-50">
+                            <span class="font-semibold">Kontak UMKM</span>
+                            @if($umkm->contact_name)
+                                <span>{{ $umkm->contact_name }}</span>
+                            @endif
+                            @if($umkm->contact_phone)
+                                @if($waUrl)
+                                    <a href="{{ $waUrl }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-emerald-200 hover:text-emerald-100">
+                                        💬 WhatsApp: {{ $umkm->contact_phone }}
+                                    </a>
+                                @else
+                                    <span>{{ $umkm->contact_phone }}</span>
+                                @endif
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-4 pb-28" x-data="{ open: false }">
+    <main class="flex-1 max-w-md mx-auto w-full px-4 pb-28" x-data="{ open: false }">
         <form method="GET" action="{{ route('catalog.umkm', $umkm) }}" class="space-y-4 mb-6">
             <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
@@ -88,6 +118,7 @@
             @endforelse
         </div>
     </main>
+    </div>
 
     @php
         $cartCount = 0;
@@ -103,5 +134,7 @@
             Keranjang @if($cartCount) ({{ $cartCount }}) @endif
         </a>
     </div>
+
+    <x-site-footer class="pb-28" />
 </body>
 </html>

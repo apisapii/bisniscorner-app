@@ -9,7 +9,8 @@ class Order extends Model
 {
     use HasFactory;
 
-    // Tambahkan baris ini 👇
+    public const SERVICE_FEE_FLAT = 500;
+
     public const PAYMENT_PENDING = 'pending';
 
     public const PAYMENT_PAID = 'paid';
@@ -24,6 +25,7 @@ class Order extends Model
         'customer_name',
         'customer_email',
         'total_amount',
+        'service_fee_amount',
         'status',
         'payment_status',
         'payment_paid_at',
@@ -61,5 +63,10 @@ class Order extends Model
             self::PAYMENT_EXPIRED => 'Kadaluarsa',
             default => $this->payment_status ?? '-',
         };
+    }
+
+    public function subtotalAmount(): int
+    {
+        return max(0, (int) $this->total_amount - (int) $this->service_fee_amount);
     }
 }

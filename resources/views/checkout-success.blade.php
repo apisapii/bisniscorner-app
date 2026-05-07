@@ -6,8 +6,9 @@
     <title>@if($order->isPaid()) Pesanan lunas @else Menunggu pembayaran @endif</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-blue-600 antialiased text-gray-900 flex items-center justify-center min-h-screen p-4">
+<body class="min-h-screen flex flex-col bg-blue-600 antialiased text-gray-900">
 
+    <div class="flex-1 flex flex-col items-center justify-center p-4 w-full min-h-0">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden text-center">
         @if (session('success'))
             <div class="bg-green-50 text-green-800 text-sm font-semibold px-4 py-3 border-b border-green-100">
@@ -56,7 +57,17 @@
                 @endforeach
             </div>
 
-            <div class="flex justify-between items-center font-bold text-lg border-t pt-4">
+            <div class="space-y-1 text-sm border-t pt-4">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Subtotal produk</span>
+                    <span class="font-semibold text-gray-800">Rp {{ number_format($order->subtotalAmount(), 0, ',', '.') }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Biaya layanan</span>
+                    <span class="font-semibold text-gray-800">Rp {{ number_format($order->service_fee_amount, 0, ',', '.') }}</span>
+                </div>
+            </div>
+            <div class="flex justify-between items-center font-bold text-lg border-t pt-3 mt-3">
                 <span>@if($order->isPaid()) Total (lunas) @else Total tagihan @endif</span>
                 <span class="@if($order->isPaid()) text-green-600 @else text-amber-600 @endif">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
             </div>
@@ -97,6 +108,9 @@
             </a>
         </div>
     </div>
+    </div>
+
+    <x-site-footer />
 
 </body>
 </html>

@@ -26,6 +26,9 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'umkm_description' => ['nullable', 'string', 'max:1000'],
+            'umkm_contact_name' => ['nullable', 'string', 'max:255'],
+            'umkm_contact_phone' => ['nullable', 'string', 'max:50'],
         ];
     }
 }

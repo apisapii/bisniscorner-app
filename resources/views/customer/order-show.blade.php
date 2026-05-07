@@ -6,12 +6,12 @@
     <title>{{ $order->order_number }} — Detail pesanan</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 antialiased text-gray-900">
-    <div class="print:hidden">
+<body class="min-h-screen flex flex-col bg-gray-100 antialiased text-gray-900">
+    <div class="print:hidden shrink-0">
         <x-navbar />
     </div>
 
-    <main class="max-w-md mx-auto p-4 pb-24">
+    <main class="flex-1 max-w-md mx-auto w-full p-4 pb-8">
         <a href="{{ route('customer.history') }}" class="text-sm font-semibold text-blue-600 mb-4 inline-block">← Riwayat</a>
 
         @if (session('success'))
@@ -69,9 +69,21 @@
             @endforeach
         </ul>
 
-        <div class="bg-white rounded-2xl border border-gray-100 p-4 flex justify-between items-center font-bold text-lg mb-6">
-            <span>Total</span>
-            <span class="@if($order->isPaid()) text-green-600 @else text-amber-600 @endif">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+        <div class="bg-white rounded-2xl border border-gray-100 p-4 mb-6">
+            <div class="space-y-1 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Subtotal produk</span>
+                    <span class="font-semibold text-gray-800">Rp {{ number_format($order->subtotalAmount(), 0, ',', '.') }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Biaya layanan</span>
+                    <span class="font-semibold text-gray-800">Rp {{ number_format($order->service_fee_amount, 0, ',', '.') }}</span>
+                </div>
+            </div>
+            <div class="flex justify-between items-center font-bold text-lg border-t pt-3 mt-3">
+                <span>Total</span>
+                <span class="@if($order->isPaid()) text-green-600 @else text-amber-600 @endif">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+            </div>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-2 print:hidden">
@@ -91,5 +103,7 @@
             .print\:hidden { display: none !important; }
         }
     </style>
+
+    <x-site-footer />
 </body>
 </html>

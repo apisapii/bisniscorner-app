@@ -34,6 +34,17 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
+        if (
+            $request->user()->role === 'admin_umkm'
+            && $request->user()->umkm
+        ) {
+            $request->user()->umkm->update([
+                'description' => $request->input('umkm_description'),
+                'contact_name' => $request->input('umkm_contact_name'),
+                'contact_phone' => $request->input('umkm_contact_phone'),
+            ]);
+        }
+
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 

@@ -17,8 +17,23 @@
                 </div>
             @endif
 
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="rounded-2xl border border-indigo-100 bg-indigo-50 p-4">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-indigo-700">Total kategori</p>
+                    <p class="mt-1 text-2xl font-black text-indigo-900">{{ $categories->count() }}</p>
+                </div>
+                <div class="rounded-2xl border border-blue-100 bg-blue-50 p-4">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-blue-700">Kategori dengan ikon</p>
+                    <p class="mt-1 text-2xl font-black text-blue-900">{{ $categories->filter(fn($c) => filled($c->icon))->count() }}</p>
+                </div>
+                <div class="rounded-2xl border border-violet-100 bg-violet-50 p-4">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-violet-700">Tanpa ikon</p>
+                    <p class="mt-1 text-2xl font-black text-violet-900">{{ $categories->filter(fn($c) => blank($c->icon))->count() }}</p>
+                </div>
+            </div>
+
             <div class="grid gap-3 sm:grid-cols-2">
-                @foreach($categories as $cat)
+                @forelse($categories as $cat)
                     <div class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md hover:border-indigo-200">
                         <div class="flex items-start justify-between gap-3">
                             <div class="flex items-center gap-3">
@@ -43,7 +58,12 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div class="col-span-full rounded-3xl border-2 border-dashed border-gray-200 py-14 text-center bg-white">
+                        <span class="text-4xl">🏷️</span>
+                        <p class="mt-2 text-sm text-gray-500">Belum ada kategori produk.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
